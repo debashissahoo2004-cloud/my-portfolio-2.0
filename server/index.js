@@ -194,11 +194,15 @@ app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// ── START ────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🚀 Portfolio server running on http://localhost:${PORT}`);
-  console.log(`   Email configured: ${process.env.EMAIL_USER ? '✓' : '✗ (set EMAIL_USER in .env)'}\n`);
-});
+// ── START (local only) / EXPORT (Vercel serverless) ─────────────────
+module.exports = app;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 Portfolio server running on http://localhost:${PORT}`);
+    console.log(`   Email configured: ${process.env.EMAIL_USER ? '✓' : '✗ (set EMAIL_USER in .env)'}\n`);
+  });
+}
 
 // ── HELPERS ──────────────────────────────────────────────────────────
 function escapeHtml(str) {
