@@ -18,6 +18,7 @@ app.use(helmet({
       styleSrc:  ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
       fontSrc:   ["'self'", "fonts.gstatic.com", "fonts.googleapis.com"],
       imgSrc:    ["'self'", "data:"],
+      objectSrc: ["'self'"],
       connectSrc: ["'self'"],
     },
   },
@@ -185,8 +186,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// ── SPA FALLBACK ─────────────────────────────────────────────────────
-app.get('*', (req, res) => {
+// ── SPA FALLBACK (do not hijack PDFs, images, or other static files) ─
+app.get('*', (req, res, next) => {
+  if (/\.[a-z0-9]+$/i.test(req.path)) {
+    return res.status(404).send('Not found');
+  }
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

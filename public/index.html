@@ -18,7 +18,6 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Debasish Sahoo","jobTitle":"Frontend Developer","email":"debashissahoo2004@gmail.com","telephone":"+918018910886","alumniOf":{"@type":"CollegeOrUniversity","name":"GITA Autonomous College"},"url":"https://debasishsahoo.dev","sameAs":["https://linkedin.com/in/debasishsahoo","https://github.com/debasishsahoo"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
 --bg:#03050d;--bg2:#070c1a;--surface:#0d1526;--surface2:#121d35;
@@ -125,18 +124,26 @@ body:has(a:hover) #cur-ring,body:has(button:hover) #cur-ring{width:48px;height:4
 .stat-n{font-family:var(--mono);font-size:2.4rem;font-weight:700;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .stat-l{font-family:var(--mono);font-size:.65rem;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem}
 
-/* ── 3D AVATAR SCENE ── */
-.avatar-scene{position:relative;width:320px;height:320px;margin:0 auto}
-#avatar-canvas{width:100%;height:100%;border-radius:50%}
-.avatar-ring-1{position:absolute;inset:-18px;border:1px solid rgba(94,161,255,0.15);border-radius:50%;animation:spin1 25s linear infinite}
-.avatar-ring-2{position:absolute;inset:-36px;border:1px dashed rgba(167,139,250,0.12);border-radius:50%;animation:spin1 38s linear infinite reverse}
-.avatar-orb{position:absolute;width:44px;height:44px;background:var(--surface2);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;color:var(--a);font-weight:500;transition:all .3s;cursor:default}
+/* ── PROFILE PHOTO SCENE ── */
+.avatar-scene{position:relative;width:320px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.avatar-visual{position:relative;width:300px;height:300px;margin:0 auto}
+.profile-photo-wrap{position:absolute;inset:10px;border-radius:50%}
+.profile-photo-spin{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,var(--a),var(--a2),var(--a3),var(--a4),var(--a));animation:spin1 8s linear infinite;z-index:0}
+.profile-photo-spin::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--bg)}
+.profile-photo-inner{position:absolute;inset:8px;border-radius:50%;overflow:hidden;background:var(--surface2);border:2px solid var(--b2);box-shadow:var(--glow),0 0 50px rgba(94,161,255,0.2);z-index:1}
+.profile-photo{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;animation:photoZoom 6s ease-in-out infinite alternate}
+.profile-name{margin-top:2rem;font-size:clamp(1.15rem,3vw,1.45rem);font-weight:800;letter-spacing:.03em;text-align:center;line-height:1.2;background:linear-gradient(135deg,var(--t) 0%,var(--a) 45%,var(--a2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.profile-name-tag{font-family:var(--mono);font-size:.62rem;color:var(--t3);letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-top:.45rem}
+.avatar-ring-1{position:absolute;inset:-18px;border:1px solid rgba(94,161,255,0.15);border-radius:50%;animation:spin1 25s linear infinite;pointer-events:none}
+.avatar-ring-2{position:absolute;inset:-36px;border:1px dashed rgba(167,139,250,0.12);border-radius:50%;animation:spin1 38s linear infinite reverse;pointer-events:none}
+.avatar-orb{position:absolute;width:44px;height:44px;background:var(--surface2);border:1px solid var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;color:var(--a);font-weight:500;transition:all .3s;cursor:default;z-index:5}
 .avatar-orb:hover{background:rgba(94,161,255,0.1);border-color:var(--a);color:var(--t);transform:scale(1.15)}
 .orb1{top:-22px;left:50%;transform:translateX(-50%)}
 .orb2{right:-22px;top:50%;transform:translateY(-50%)}
 .orb3{bottom:-22px;left:50%;transform:translateX(-50%)}
 .orb4{left:-22px;top:50%;transform:translateY(-50%)}
 @keyframes spin1{to{transform:rotate(360deg)}}
+@keyframes photoZoom{0%{transform:scale(1)}100%{transform:scale(1.05)}}
 
 /* ── SKILLS ── */
 .skills-bg{background:rgba(7,12,26,0.6);border-top:1px solid var(--b1);border-bottom:1px solid var(--b1)}
@@ -377,13 +384,22 @@ footer{border-top:1px solid var(--b1);padding:2.5rem 3rem;display:flex;justify-c
     </div>
     <div class="reveal-right" style="display:flex;justify-content:center">
       <div class="avatar-scene">
-        <div class="avatar-ring-1" aria-hidden="true"></div>
-        <div class="avatar-ring-2" aria-hidden="true"></div>
-        <canvas id="avatar-canvas" aria-label="Animated 3D avatar representing Debasish's skills"></canvas>
-        <div class="avatar-orb orb1" title="Python">PY</div>
-        <div class="avatar-orb orb2" title="JavaScript">JS</div>
-        <div class="avatar-orb orb3" title="HTML5">HTML</div>
-        <div class="avatar-orb orb4" title="Java">JAVA</div>
+        <div class="avatar-visual">
+          <div class="avatar-ring-1" aria-hidden="true"></div>
+          <div class="avatar-ring-2" aria-hidden="true"></div>
+          <div class="profile-photo-wrap">
+            <div class="profile-photo-spin" aria-hidden="true"></div>
+            <div class="profile-photo-inner">
+              <img src="assets/profile.jpg" alt="Debasish Sahoo" class="profile-photo" width="280" height="280" loading="eager" decoding="async"/>
+            </div>
+          </div>
+          <div class="avatar-orb orb1" title="Python">PY</div>
+          <div class="avatar-orb orb2" title="JavaScript">JS</div>
+          <div class="avatar-orb orb3" title="HTML5">HTML</div>
+          <div class="avatar-orb orb4" title="django">django</div>
+        </div>
+        <p class="profile-name">Debasish Sahoo</p>
+        <p class="profile-name-tag">Fullstack devloper</p>
       </div>
     </div>
   </div>
@@ -406,7 +422,7 @@ footer{border-top:1px solid var(--b1);padding:2.5rem 3rem;display:flex;justify-c
         <div class="bar-row"><div class="bar-meta"><span class="bar-name">C</span><span class="bar-pct">60%</span></div><div class="bar-track"><div class="bar-fill" data-w="60"></div></div></div>
       </div>
       <div class="skill-card" data-skill>
-        <div class="sk-cat">Frontend</div>
+        <div class="sk-cat">Fullstack</div>
         <div class="sk-tags">
           <span class="sk-tag">HTML5</span><span class="sk-tag">CSS3</span><span class="sk-tag">JavaScript</span>
           <span class="sk-tag">Responsive Design</span><span class="sk-tag">CSS Animations</span>
@@ -523,9 +539,9 @@ footer{border-top:1px solid var(--b1);padding:2.5rem 3rem;display:flex;justify-c
           </div>
         </div>
         <div class="proj-body">
-          <h3 class="proj-title">Python Automation Toolkit</h3>
-          <div class="proj-impact">Reduced manual task time by ~70%</div>
-          <p class="proj-desc">A collection of Python scripts automating repetitive workflows including file organization, bulk data processing, CSV report generation, and email notifications — boosting personal and team productivity significantly.</p>
+          <h3 class="proj-title">gymwake</h3>
+          <div class="proj-impact">asthetic outfits for fitness industry </div>
+          <p class="proj-desc">GYM WAKE is a modern, high-performance gym wear e-commerce website designed for fitness enthusiasts and athletes. The platform combines a bold dark-themed UI with a premium shopping experience focused on style, performance, and usability.</p>
           <div class="proj-tech"><span>Python</span><span>Automation</span><span>CSV</span><span>File I/O</span><span>PyCharm</span></div>
           <div class="proj-footer">
             <a href="#">Source Code</a>
@@ -734,37 +750,19 @@ document.querySelectorAll('.skill-card').forEach(card=>{
   });
 });
 
-/* ── AVATAR THREE.JS ── */
+/* ── PROFILE PHOTO TILT + FLOAT ── */
 (function(){
-  if(!window.THREE){return}
-  const c=document.getElementById('avatar-canvas');
-  const renderer=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(320,320);
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(45,1,0.1,100);
-  camera.position.set(0,0,5);
-  const geo=new THREE.IcosahedronGeometry(1.5,1);
-  const mat=new THREE.MeshStandardMaterial({color:0x1a2a4a,metalness:.9,roughness:.15,wireframe:false});
-  const mesh=new THREE.Mesh(geo,mat);
-  scene.add(mesh);
-  const wMat=new THREE.MeshBasicMaterial({color:0x5ea1ff,wireframe:true,opacity:.15,transparent:true});
-  const wMesh=new THREE.Mesh(geo,wMat);
-  scene.add(wMesh);
-  const aLight=new THREE.AmbientLight(0xffffff,.3);scene.add(aLight);
-  const pLight=new THREE.PointLight(0x5ea1ff,2,10);pLight.position.set(3,3,3);scene.add(pLight);
-  const pLight2=new THREE.PointLight(0xa78bfa,1.5,10);pLight2.position.set(-3,-2,2);scene.add(pLight2);
-  const pLight3=new THREE.PointLight(0x34d399,.8,10);pLight3.position.set(0,3,-2);scene.add(pLight3);
-  let tx=0,ty=0,tvx=0,tvy=0;
-  document.addEventListener('mousemove',e=>{tvx=(e.clientX/window.innerWidth-.5)*.04;tvy=(e.clientY/window.innerHeight-.5)*.04},{passive:true});
-  (function animate(){
-    tx+=(tvx-tx)*.05;ty+=(tvy-ty)*.05;
-    mesh.rotation.x+=.003+ty;mesh.rotation.y+=.005+tx;
-    wMesh.rotation.x=mesh.rotation.x;wMesh.rotation.y=mesh.rotation.y;
-    pLight.position.x=Math.sin(Date.now()*.001)*3;
-    pLight.position.y=Math.cos(Date.now()*.0007)*3;
-    renderer.render(scene,camera);
-    requestAnimationFrame(animate);
+  const inner=document.querySelector('.profile-photo-inner');
+  if(!inner)return;
+  let tx=0,ty=0;
+  document.addEventListener('mousemove',e=>{
+    tx=(e.clientX/window.innerWidth-.5)*12;
+    ty=(e.clientY/window.innerHeight-.5)*12;
+  },{passive:true});
+  (function tilt(){
+    const floatY=Math.sin(Date.now()*.0015)*8;
+    inner.style.transform=`translateY(${floatY}px) perspective(700px) rotateY(${tx}deg) rotateX(${-ty}deg)`;
+    requestAnimationFrame(tilt);
   })();
 })();
 
